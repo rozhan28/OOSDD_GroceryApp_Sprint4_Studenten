@@ -15,11 +15,14 @@
             <RowDefinition Height="80"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Picker Grid.Column="0" Grid.Row="0" Margin="10,0,0,0" Title="Klik op onderstaand pijltje om een product te selecteren:"
-        ItemsSource="{Binding Products}"
-        SelectedItem="{Binding SelectedProduct, Mode=TwoWay}" 
-        SelectedIndexChanged="Picker_SelectedIndexChanged"
-        BackgroundColor="{StaticResource Primary}"
+
+        <Picker Grid.Column="0" Grid.Row="0" Margin="10,0,0,0"
+            Title="Klik op onderstaand pijltje om een product te selecteren:"
+            ItemsSource="{Binding Products}"
+            SelectedItem="{Binding SelectedProduct, Mode=TwoWay}"
+            ItemDisplayBinding="{Binding Name}"
+            SelectedIndexChanged="Picker_SelectedIndexChanged"
+            BackgroundColor="{StaticResource Primary}"
             TextColor="{StaticResource Secondary}">
         </Picker>
         <Border Grid.Row="1" Grid.Column="0" Stroke="#C49B33" StrokeThickness="4" Padding="5" Margin="5" HorizontalOptions="Center">
@@ -29,12 +32,13 @@
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="m:BoughtProducts" >
-                        <Grid>
+                        <Grid Padding="5">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <!-- Toon hier de naam van de Client naam van de boodschappenlijst -->
+                            <Label Grid.Column="0" Text="{Binding ClientName}" FontAttributes="Bold"/>
+                            <Label Grid.Column="1" Text="{Binding GroceryListName}" HorizontalOptions="End" />
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
