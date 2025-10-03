@@ -9,11 +9,13 @@ namespace Grocery.App.ViewModels
 {
     public partial class GroceryListViewModel : BaseViewModel
     {
-        public ObservableCollection<GroceryList> GroceryLists { get; set; }
         private readonly IGroceryListService _groceryListService;
         private readonly IClientService _clientService;
 
-        public Client Client { get; set; }
+        public ObservableCollection<GroceryList> GroceryLists { get; private set; }
+
+        // Huidige ingelogde client
+        public Client Client { get; private set; }
 
         public GroceryListViewModel(IGroceryListService groceryListService, IClientService clientService)
         {
@@ -26,11 +28,15 @@ namespace Grocery.App.ViewModels
             GroceryLists = new ObservableCollection<GroceryList>(_groceryListService.GetAll());
         }
 
+        // Command om een boodschappenlijst te selecteren en navigeren naar de items view
         [RelayCommand]
         public async Task SelectGroceryList(GroceryList groceryList)
         {
-            Dictionary<string, object> paramater = new() { { nameof(GroceryList), groceryList } };
-            await Shell.Current.GoToAsync($"{nameof(Views.GroceryListItemsView)}?Titel={groceryList.Name}", true, paramater);
+            var parameters = new Dictionary<string, object>
+            {
+                { nameof(GroceryList), groceryList }
+            };
+            await Shell.Current.GoToAsync($"{nameof(Views.GroceryListItemsView)}?Titel={groceryList.Name}", true, parameters);
         }
 
         public override void OnAppearing()
@@ -45,13 +51,15 @@ namespace Grocery.App.ViewModels
             GroceryLists.Clear();
         }
 
+        // Command om aangekochte producten te tonen, alleen voor admin
         [RelayCommand]
         public async Task ShowBoughtProducts()
         {
-            if (Client != null && Client.Role == Role.Admin)
+            if (Client?.Role == Role.Admin)
             {
                 await Shell.Current.GoToAsync(nameof(Views.BoughtProductsView));
             }
         }
     }
 }
+
