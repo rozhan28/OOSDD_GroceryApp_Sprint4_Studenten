@@ -16,6 +16,7 @@ namespace Grocery.Core.Models
 
         public BoughtProducts() { }
 
+        // Constructor met parameters voor eenvoudige initialisatie
         public BoughtProducts(int clientId, string clientName, int groceryListId, string groceryListName, int productId, string productName, int amount)
         {
             ClientId = clientId;
@@ -28,3 +29,4 @@ namespace Grocery.Core.Models
         }
     }
 }
+

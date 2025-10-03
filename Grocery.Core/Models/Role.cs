@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Grocery.Core.Models
 {
+    // Enum die de rol van een klant of gebruiker definieert
     public enum Role
     {
         None,

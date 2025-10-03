@@ -3,16 +3,19 @@ using Grocery.Core.Models;
 using Grocery.Core.Services;
 using Grocery.Core.Interfaces.Repositories;
 using Moq;
+using System;
 using System.Collections.Generic;
 
 namespace Grocery.Tests
 {
+    [TestFixture]
     public class BoughtProductsServiceTests
     {
+        // Test of Get() correct alle klanten teruggeeft die een bepaald product hebben gekocht
         [Test]
         public void Get_ReturnsAllClientsWhoBoughtProduct()
         {
-            // Arrange
+            // Arrange: Stel testdata samen
             int productId = 1;
 
             var clients = new List<Client>
@@ -35,12 +38,11 @@ namespace Grocery.Tests
             var groceryLists = new List<GroceryList>
             {
                new GroceryList(1, "List1", DateOnly.FromDateTime(DateTime.Today), "Red", 1),
-               new GroceryList(2, "List2", DateOnly.FromDateTime(DateTime.Today), "Blue", 2),
-
+               new GroceryList(2, "List2", DateOnly.FromDateTime(DateTime.Today), "Blue", 2)
             };
             var groceryListRepoMock = new Mock<IGroceryListRepository>();
             groceryListRepoMock.Setup(r => r.GetAll()).Returns(groceryLists);
-            
+
             var groceryListItems = new List<GroceryListItem>
             {
                 new GroceryListItem(1, 1, 1, 3), 
@@ -50,6 +52,7 @@ namespace Grocery.Tests
             var groceryListItemsRepoMock = new Mock<IGroceryListItemsRepository>();
             groceryListItemsRepoMock.Setup(r => r.GetAll()).Returns(groceryListItems);
 
+            // Maak de service aan met de mocks
             var service = new BoughtProductsService(
                 groceryListItemsRepoMock.Object,
                 groceryListRepoMock.Object,
@@ -57,15 +60,16 @@ namespace Grocery.Tests
                 productRepoMock.Object
             );
 
-            // Act
+            // Act: Haal alle aankopen van productId op
             var result = service.Get(productId);
 
-            // Assert
+            // Assert: Controleer of de resultaten correct zijn
             Assert.IsNotNull(result);
-            Assert.AreEqual(2, result.Count); 
+            Assert.AreEqual(2, result.Count);
             Assert.IsTrue(result.Exists(p => p.ClientName == "Alice" && p.GroceryListName == "List1"));
             Assert.IsTrue(result.Exists(p => p.ClientName == "Bob" && p.GroceryListName == "List2"));
         }
     }
 }
+
 
