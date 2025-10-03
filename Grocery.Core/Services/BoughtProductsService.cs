@@ -7,6 +7,7 @@ using System.Linq;
 
 namespace Grocery.Core.Services
 {
+    // Service die gegevens over aangekochte producten verzamelt en teruggeeft
     public class BoughtProductsService : IBoughtProductsService
     {
         private readonly IGroceryListItemsRepository _groceryListItemsRepository;
@@ -23,12 +24,10 @@ namespace Grocery.Core.Services
             _groceryListItemsRepository = groceryListItemsRepository;
             _groceryListRepository = groceryListRepository;
             _clientRepository = clientRepository;
-            _product_repository_check(productRepository);
             _productRepository = productRepository;
         }
 
-        private void _product_repository_check(IProductRepository _p) { }
-
+        // Haalt aangekochte producten op, optioneel gefilterd op ProductId
         public List<BoughtProducts> Get(int? productId)
         {
             var allItems = _groceryListItemsRepository.GetAll();
@@ -37,6 +36,7 @@ namespace Grocery.Core.Services
                 ? allItems.Where(i => i.ProductId == productId.Value).ToList()
                 : allItems.ToList();
 
+            // Alle benodigde entiteiten ophalen en omzetten naar dictionary voor snelle lookup
             var allProducts = _productRepository.GetAll().ToDictionary(p => p.Id);
             var allLists = _groceryListRepository.GetAll().ToDictionary(l => l.Id);
             var allClients = _clientRepository.GetAll().ToDictionary(c => c.Id);
@@ -74,3 +74,4 @@ namespace Grocery.Core.Services
         }
     }
 }
+

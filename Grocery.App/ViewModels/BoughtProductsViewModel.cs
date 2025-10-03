@@ -13,8 +13,8 @@ namespace Grocery.App.ViewModels
         [ObservableProperty]
         private Product? selectedProduct;
 
-        public ObservableCollection<BoughtProducts> BoughtProductsList { get; set; } = new ObservableCollection<BoughtProducts>();
-        public ObservableCollection<Product> Products { get; set; }
+        public ObservableCollection<BoughtProducts> BoughtProductsList { get; } = new ObservableCollection<BoughtProducts>();
+        public ObservableCollection<Product> Products { get; }
 
         public BoughtProductsViewModel(IBoughtProductsService boughtProductsService, IProductService productService)
         {
@@ -22,22 +22,21 @@ namespace Grocery.App.ViewModels
             Products = new ObservableCollection<Product>(productService.GetAll());
         }
 
+        // Wordt aangeroepen wanneer SelectedProduct verandert
         partial void OnSelectedProductChanged(Product? oldValue, Product newValue)
         {
-            if (newValue == null)
-            {
-                BoughtProductsList.Clear();
-                return;
-            }
+            BoughtProductsList.Clear();
+
+            if (newValue == null) return;
 
             var boughtProducts = _boughtProductsService.Get(newValue.Id);
-
-            BoughtProductsList.Clear();
             foreach (var bp in boughtProducts)
             {
                 BoughtProductsList.Add(bp);
             }
         }
+
+        // RelayCommand voor het selecteren van een nieuw product
         [RelayCommand]
         public void NewSelectedProduct(Product product)
         {
@@ -45,3 +44,4 @@ namespace Grocery.App.ViewModels
         }
     }
 }
+

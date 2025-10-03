@@ -4,6 +4,7 @@ using Grocery.Core.Models;
 
 namespace Grocery.Core.Services
 {
+    // Service voor het beheren van GroceryListItems
     public class GroceryListItemsService : IGroceryListItemsService
     {
         private readonly IGroceryListItemsRepository _groceriesRepository;
@@ -17,6 +18,7 @@ namespace Grocery.Core.Services
             _productRepository = productRepository;
         }
 
+        // Haal alle grocery items op en vul product info
         public List<GroceryListItem> GetAll()
         {
             var groceryListItems = _groceriesRepository.GetAll();
@@ -24,6 +26,7 @@ namespace Grocery.Core.Services
             return groceryListItems;
         }
 
+        // Haal alle items op voor een specifieke boodschappenlijst
         public List<GroceryListItem> GetAllOnGroceryListId(int groceryListId)
         {
             var groceryListItems = _groceriesRepository
@@ -35,26 +38,19 @@ namespace Grocery.Core.Services
             return groceryListItems;
         }
 
-        public GroceryListItem Add(GroceryListItem item)
-        {
-            return _groceriesRepository.Add(item);
-        }
+        public GroceryListItem Add(GroceryListItem item) => _groceriesRepository.Add(item);
 
         public GroceryListItem? Delete(GroceryListItem item)
         {
-            throw new NotImplementedException();
+            // nog niet geïmplementeerd
+            throw new NotImplementedException(); 
         }
 
-        public GroceryListItem? Get(int id)
-        {
-            return _groceriesRepository.Get(id);
-        }
+        public GroceryListItem? Get(int id) => _groceriesRepository.Get(id);
 
-        public GroceryListItem? Update(GroceryListItem item)
-        {
-            return _groceriesRepository.Update(item);
-        }
+        public GroceryListItem? Update(GroceryListItem item) => _groceriesRepository.Update(item);
 
+        // Top X best verkopende producten berekenen
         public List<BestSellingProducts> GetBestSellingProducts(int topX = 5)
         {
             var allItems = _groceriesRepository.GetAll();
@@ -73,7 +69,7 @@ namespace Grocery.Core.Services
                         ProductId = g.Key,
                         productInfo.Name,
                         productInfo.Stock,
-                        NrOfSells = g.Sum(i => i.Amount) 
+                        NrOfSells = g.Sum(i => i.Amount)
                     };
                 })
                 .OrderByDescending(p => p.NrOfSells)
@@ -83,19 +79,21 @@ namespace Grocery.Core.Services
                     p.Name,
                     p.Stock,
                     p.NrOfSells,
-                    index + 1 
+                    index + 1
                 ))
                 .ToList();
 
             return bestSelling;
         }
 
+        // Vul productinformatie in de items
         private void FillService(List<GroceryListItem> groceryListItems)
         {
             foreach (var g in groceryListItems)
             {
-                g.Product = _productRepository.Get(g.ProductId) ?? new(0, "", 0);
+                g.Product = _productRepository.Get(g.ProductId) ?? new Product(0, "", 0);
             }
         }
     }
 }
+
