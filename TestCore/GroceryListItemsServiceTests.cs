@@ -14,7 +14,7 @@ namespace TestCore
         private Mock<IGroceryListItemsRepository> _mockRepo;
         private Mock<IProductRepository> _mockProductRepo;
         private GroceryListItemsService _service;
-        
+
         [SetUp]
         public void Setup()
         {
@@ -23,29 +23,28 @@ namespace TestCore
             _service = new GroceryListItemsService(_mockRepo.Object, _mockProductRepo.Object);
         }
 
+        // Test voor het ophalen van de best verkopende producten
         [Test]
         public void GetBestSellingProducts_ReturnsTopX()
         {
-            // Arrange
+            // Arrange: voorbeelddata instellen
             _mockRepo.Setup(r => r.GetAll()).Returns(new List<GroceryListItem>
-{
+            {
                 new GroceryListItem(1, 1, 1, 2),
                 new GroceryListItem(2, 1, 1, 3),
                 new GroceryListItem(3, 1, 2, 1)
             });
 
-
             _mockProductRepo.Setup(p => p.GetAll()).Returns(new List<Product>
-{
+            {
                 new Product(1, "Banaan", 50),
                 new Product(2, "Appel", 30)
             });
 
-
-            // Act
+            // Act: methode uitvoeren
             var result = _service.GetBestSellingProducts(1);
 
-            // Assert
+            // Assert: controleer resultaten
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result.First().Name, Is.EqualTo("Banaan"));
             Assert.That(result.First().NrOfSells, Is.EqualTo(5));
@@ -53,4 +52,5 @@ namespace TestCore
         }
     }
 }
+
 
