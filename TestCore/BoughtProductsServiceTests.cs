@@ -16,7 +16,7 @@ namespace Grocery.Tests
             int productId = 1;
 
             var clients = new List<Client>
-            {//test
+            {
                 new Client(1, "Alice", "alice@mail.com", "password") { Role = Role.None },
                 new Client(2, "Bob", "bob@mail.com", "password") { Role = Role.None },
                 new Client(3, "Charlie", "charlie@mail.com", "password") { Role = Role.Admin }
