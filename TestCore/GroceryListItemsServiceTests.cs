@@ -14,7 +14,7 @@ namespace TestCore
         private Mock<IGroceryListItemsRepository> _mockRepo;
         private Mock<IProductRepository> _mockProductRepo;
         private GroceryListItemsService _service;
-        //test
+        
         [SetUp]
         public void Setup()
         {
